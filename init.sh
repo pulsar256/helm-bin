@@ -19,6 +19,11 @@ SKIP_TLS_VERIFY=${SKIP_TLS_VERIFY:-false}
 
 if [[ $SKIP_TLS_VERIFY -eq "false" ]]; then
   requireEnvVar "${KUBE_CA}" "KUBE_CA is not set"
+  echo $KUBE_CA | base64 -d >/dev/null
+  if [ $? -ne 0 ]; then
+    echo "KUBE_CA does not seem to be base64 encoded. attempt to fix"
+    KUBE_CA="$(echo $KUBE_CA | base64 | tr -d '\n')"
+  fi
 fi
 echo SKIP_TLS_VERIFY $SKIP_TLS_VERIFY
 
@@ -59,7 +64,6 @@ users:
 EOF
 
 # setup runtime environment and delegate execution to the requested binary.
-
 command=$(basename $0)
 
 export KUBECONFIG=$HOME/kubeconfig
