@@ -1,7 +1,6 @@
 # HELM Binary
 
-Wraps the helm binary and preconfigures the runtime environment with a 
-sevice user for a given kubernetes api server.
+Wraps the helm, kubectl binary and preconfigures the runtime environment with a sevice user for a given kubernetes api server.
 
 Initial motivation: to be used as a part of a CI/CD pipeline, ideally within (but not restricted to) the cluster.
 
@@ -34,7 +33,10 @@ docker build \
 ```
 
 ## Usage
+ 
 
+### Standalone
+ 
 ```bash
 docker run \
     -e HELM_VERSION="v2.14.1" \
@@ -43,4 +45,41 @@ docker run \
     -e KUBE_TOKEN=$KUBE_TOKEN \
     -e KUBE_CA=$KUBE_CA \
     pulsar256/helm-bin ls
+```
+
+### Standalone interactive
+
+```bash
+ ᐅ docker run \
+    -e HELM_VERSION="v2.14.1" \
+    -e KUBECTL_VERSION="v1.14.3" \
+    -e KUBE_MASTER=$KUBE_MASTER \
+    -e KUBE_TOKEN=$KUBE_TOKEN \
+    -e KUBE_CA=$KUBE_CA \
+    --entrypoint="bash" -it \
+    pulsar256/helm-bin 
+
+bash-4.4# helm ls
+(...)
+```
+
+### Within drone.io
+ 
+```yaml
+kind: pipeline
+name: default
+
+steps:
+- name: drone-integration-test
+  image: pulsar256/helm-bin
+  environment:
+    HELM_VERSION: "v2.14.1"
+    KUBECTL_VERSION: "v1.14.3"
+    KUBE_CA: "Base64 CA.crt"
+    KUBE_MASTER: "https://example.com:443"
+    KUBE_TOKEN: "secrit service account token"
+  commands:
+    - helm version
+    - helm ls
+    - kubectl get pods
 ```

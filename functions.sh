@@ -25,5 +25,4 @@ function requireEnvVar {
         echo "$2 is not set"
         exit 1
     fi  
-}  
-         
+}
