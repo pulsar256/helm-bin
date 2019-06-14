@@ -17,21 +17,25 @@ requireEnvVar "${KUBE_MASTER}" "KUBE_MASTER is not set"
 requireEnvVar "${KUBE_TOKEN}" "KUBE_TOKEN is not set"
 SKIP_TLS_VERIFY=${SKIP_TLS_VERIFY:-false}
 
-if [[ $SKIP_TLS_VERIFY -eq "false" ]]; then
+if [ "$SKIP_TLS_VERIFY" = "false" ]; then
   requireEnvVar "${KUBE_CA}" "KUBE_CA is not set"
-  echo $KUBE_CA | base64 -d >/dev/null
+  echo "$KUBE_CA" | base64 -d >/dev/null
   if [ $? -ne 0 ]; then
-    echo "KUBE_CA does not seem to be base64 encoded. attempt to fix"
-    KUBE_CA="$(echo $KUBE_CA | base64 | tr -d '\n')"
+    # this is needed for drone.io + kubernetes-secrets integration.
+    # if you map a drone.io secret to a kubernetes.io/service-account-token.data.ca.crt
+    # kuberntes-secret, the base64 value of the certificate will be decoded
+    # before it gets passed to the job environment. We need to revert this in
+    # order to be able to build a valid kubeconfig
+    echo "KUBE_CA does not seem to be base64 encoded. Re-Encoding..."
+    KUBE_CA=$(echo "$KUBE_CA" | base64 | tr -d '\n')
   fi
 fi
-echo SKIP_TLS_VERIFY $SKIP_TLS_VERIFY
 
-# download requested tool versions
-downloadHelm $HELM_VERSION
+# download requested (if not previously prebaked) helm & kubectl binaries
+downloadHelm "$HELM_VERSION"
 HELM_BIN=$HOME/.local/lib/helm-${HELM_VERSION}/helm
 
-downloadKubectl $KUBECTL_VERSION
+downloadKubectl "$KUBECTL_VERSION"
 KUBE_BIN=$HOME/.local/lib/kubectl-${KUBECTL_VERSION}/kubectl
 
 # generate basic, service-account based kube config.
@@ -64,7 +68,7 @@ users:
 EOF
 
 # setup runtime environment and delegate execution to the requested binary.
-command=$(basename $0)
+command=$(basename "$0")
 
 export KUBECONFIG=$HOME/kubeconfig
 
