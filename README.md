@@ -82,3 +82,49 @@ steps:
     - helm ls
     - kubectl get pods
 ```
+
+### Within drone.io + drone-kubernetes-secrets
+
+When using a k8s service-account's token & ca.crt data via drone-kubernets-secrets plugin 
+
+```
+ᐅ kubectl get secrets
+NAME                                      TYPE                                  DATA   AGE
+(...)
+drone-helm-user-secret                    kubernetes.io/service-account-token   3      2d7h
+(...)
+```
+
+```yaml
+kind: pipeline
+name: default
+
+steps:
+- name: drone-integration-test
+  image: pulsar256/helm-bin
+  environment:
+    HELM_VERSION: "v2.14.1"
+    KUBECTL_VERSION: "v1.14.3"
+    KUBE_MASTER: "https://example.com:443"
+    KUBE_CA:
+      from_secret: drone-helm-user-crt
+    KUBE_TOKEN:
+      from_secret: drone-helm-user-token
+  commands:
+    - echo "$KUBE_CA" | base64
+    - helm ls
+
+---
+kind: secret
+name: drone-helm-user-token
+get:
+  path: drone-helm-user-secret
+  name: token
+  
+---
+kind: secret
+name: drone-helm-user-crt
+get:
+  path: drone-helm-user-secret
+  name: ca.crt
+```
