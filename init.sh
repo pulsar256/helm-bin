@@ -8,7 +8,7 @@
 #   - if called via symlink: wraps kubectl or helm binary based on the symlink
 #     name.
 
-source ./functions.sh
+source /functions.sh
 
 # validate configuration
 requireEnvVar "${HELM_VERSION}" "HELM_VERSION is not set"
