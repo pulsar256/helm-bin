@@ -111,7 +111,6 @@ steps:
     KUBE_TOKEN:
       from_secret: drone-helm-user-token
   commands:
-    - echo "$KUBE_CA" | base64
     - helm ls
 
 ---
