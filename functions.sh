@@ -7,6 +7,8 @@ function downloadHelm {
         curl http://storage.googleapis.com/kubernetes-helm/helm-${version}-linux-amd64.tar.gz > /tmp/helm-${version}.tar.gz
         mkdir -p $HOME/.local/lib/helm-${version}/
         tar -C $HOME/.local/lib/helm-${version}/ -xvf /tmp/helm-${version}.tar.gz --strip 1
+        rm $HOME/.local/lib/helm-${version}/tiller
+        upx $HOME/.local/lib/helm-${version}/helm
     fi
 }  
 
@@ -17,6 +19,7 @@ function downloadKubectl {
         mkdir -p $HOME/.local/lib/kubectl-${version}/
         curl https://storage.googleapis.com/kubernetes-release/release/${version}/bin/linux/amd64/kubectl > $HOME/.local/lib/kubectl-${version}/kubectl
         chmod +x $HOME/.local/lib/kubectl-${version}/kubectl
+        upx $HOME/.local/lib/kubectl-${version}/kubectl
     fi
 }  
 

@@ -56,7 +56,6 @@ contexts:
 - context:
     cluster: helm
     user: user
-    namespace: devops
   name: helm
 
 preferences: {}
