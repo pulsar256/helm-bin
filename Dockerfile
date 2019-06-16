@@ -29,6 +29,7 @@ RUN apk add --no-cache curl ca-certificates bash upx
 RUN mkdir -p $HOME/tmp/ \
 && sh /precache.sh $helm_version $kubectl_version \
 && ln -s /init.sh /bin/kubectl \
-&& ln -s /init.sh /bin/helm 
+&& ln -s /init.sh /bin/helm  \
+&& rm /tmp/*
 
 ENTRYPOINT [ "/init.sh" ]
