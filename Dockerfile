@@ -26,10 +26,9 @@ pulsar256/helm-bin ls"
 COPY *.sh /
 
 RUN apk add --no-cache curl ca-certificates bash upx
-RUN mkdir -p $HOME/tmp/ \
-&& sh /precache.sh $helm_version $kubectl_version \
-&& ln -s /init.sh /bin/kubectl \
-&& ln -s /init.sh /bin/helm  \
-&& rm /tmp/*
+RUN sh /precache.sh $helm_version $kubectl_version \
+&&  ln -s /init.sh /bin/kubectl \
+&&  ln -s /init.sh /bin/helm  \
+&&  rm /tmp/*
 
 ENTRYPOINT [ "/init.sh" ]

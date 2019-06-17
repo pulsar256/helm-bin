@@ -74,6 +74,14 @@ export KUBECONFIG=$HOME/kubeconfig
 echo "Configured to use helm: $HELM_BIN"
 echo ".............. kubectl: $KUBE_BIN"
 
+if [ "$DEBUG" = "true" ]; then
+  echo "#### DEBUG Kubectl: ###################################################"
+  cat $KUBECONFIG
+  echo "#### DEBUG Env: #######################################################"
+  set
+  echo "#### END DEBUG ########################################################"
+fi
+
 if [ "$command" = "helm" ]; then
   $HELM_BIN "$@"
 elif [ "$command" = "kubectl" ]; then

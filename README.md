@@ -20,6 +20,8 @@ Any arbitrary version of helm and kubectl are supported and will be dowloaded up
   affects `insecure-skip-tls-verify`, provide `KUBE_CA` if set to `false`
 - `KUBE_CA`
   k8s cluster CA
+- `DEBUG` default: false
+  additional debug output. Will dump the generated kubeconfig file and thus reveal cluste-credentials. Use with caution!
 
 ## Building
 
@@ -99,9 +101,9 @@ drone-helm-user-secret                    kubernetes.io/service-account-token   
 kind: pipeline
 name: default
 
-steps:
-- name: drone-integration-test
-  image: pulsar256/helm-bin
+- name: deploy-helm-charts
+  image: pulsar256/helm-bin:latest
+  pull: always
   environment:
     HELM_VERSION: "v2.14.1"
     KUBECTL_VERSION: "v1.14.3"
@@ -111,7 +113,7 @@ steps:
     KUBE_TOKEN:
       from_secret: drone-helm-user-token
   commands:
-    - helm ls
+    - helm upgrade --install --namespace myNamespace --set buildId=${DRONE_BRANCH/\//-}-${DRONE_COMMIT_SHA:0:8} --recreate-pods myChart charts/MyChart
 
 ---
 kind: secret
