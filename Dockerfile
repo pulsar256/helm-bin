@@ -1,8 +1,8 @@
 FROM alpine:3.9
 
 # used to precache this helm & kubectl versions and bake them into the image.
-ARG helm_version="v2.14.1"
-ARG kubectl_version="v1.14.3"
+ARG helm_version="v3.0.3"
+ARG kubectl_version="v1.17.2"
 
 LABEL maintainer="Paul Rogalinski-Pinter <paul@paul.vc>" \
 description="helm and kubectl binaries with drone.io integration" \
