@@ -9,9 +9,9 @@ Any arbitrary version of helm and kubectl are supported and will be dowloaded up
 ## Environment Parameters
 
 - `HELM_VERSION`
-  `helm` version to use, example `v2.14.1`
+  `helm` version to use, example `v3.1.1`
 - `KUBECTL_VERSION`
-  `kubectl` version to use, example `1.14.3`
+  `kubectl` version to use, example `v1.17.3`
 - `KUBE_MASTER`
   k8s api server endpoint, see `kubectl cluster-info`
 - `KUBE_TOKEN`
@@ -29,19 +29,19 @@ use default build configuration or override the helm and kubectl versions:
 
 ```bash
 ᐅ docker build \
-    --build-arg helm_version="v2.14.1" \
-    --build-arg kubectl_version="v1.14.3" \
+    --build-arg helm_version="v3.1.1" \
+    --build-arg kubectl_version="v1.17.3" \
     .
 ```
 
 ## Usage
 
 ### Standalone
- 
+
 ```bash
 ᐅ docker run \
-    -e HELM_VERSION="v2.14.1" \
-    -e KUBECTL_VERSION="v1.14.3" \
+    -e HELM_VERSION="v3.1.1" \
+    -e KUBECTL_VERSION="v1.17.3" \
     -e KUBE_MASTER=$KUBE_MASTER \
     -e KUBE_TOKEN=$KUBE_TOKEN \
     -e KUBE_CA=$KUBE_CA \
@@ -52,8 +52,8 @@ use default build configuration or override the helm and kubectl versions:
 
 ```bash
  ᐅ docker run \
-    -e HELM_VERSION="v2.14.1" \
-    -e KUBECTL_VERSION="v1.14.3" \
+    -e HELM_VERSION="v3.1.1" \
+    -e KUBECTL_VERSION="v1.17.3" \
     -e KUBE_MASTER=$KUBE_MASTER \
     -e KUBE_TOKEN=$KUBE_TOKEN \
     -e KUBE_CA=$KUBE_CA \
@@ -74,8 +74,8 @@ steps:
 - name: drone-integration-test
   image: pulsar256/helm-bin
   environment:
-    HELM_VERSION: "v2.14.1"
-    KUBECTL_VERSION: "v1.14.3"
+    HELM_VERSION: "v3.1.1"
+    KUBECTL_VERSION: "v1.17.3"
     KUBE_CA: "Base64 CA.crt"
     KUBE_MASTER: "https://example.com:443"
     KUBE_TOKEN: "secrit service account token"
@@ -105,8 +105,8 @@ name: default
   image: pulsar256/helm-bin:latest
   pull: always
   environment:
-    HELM_VERSION: "v2.14.1"
-    KUBECTL_VERSION: "v1.14.3"
+    HELM_VERSION: "v3.1.1"
+    KUBECTL_VERSION: "v1.17.3"
     KUBE_MASTER: "https://example.com:443"
     KUBE_CA:
       from_secret: drone-helm-user-crt
